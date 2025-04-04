@@ -14,5 +14,6 @@ int main(void) {
   printf("modulo : %d\n", modulo);
   int resultat = (a == b);
   printf("a est-il égal à b ? %d\n", resultat);
-  
+  int superieur = (a > b);
+  printf("a est-il superieur à b ? %d\n", superieur);
 }
