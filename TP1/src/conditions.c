@@ -15,7 +15,7 @@ int main() {
 
         if (somme > 5000) {
             break;
-          printf(" Arrêt de la boucle 5000.\n");
+          // printf(" Arrêt de la boucle 5000.\n");
         }
     }
     printf("La somme finale est : %d\n", somme);
