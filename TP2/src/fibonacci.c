@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 int main(void) {
-    int n = 7; 
+    int n = 10; 
     int u0 = 0, u1 = 1, suivant;
 
     printf("Suite de Fibonacci jusqu'à U%d :\n", n);
