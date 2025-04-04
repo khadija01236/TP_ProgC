@@ -4,7 +4,7 @@
 #define TAILLE_CONCAT 900
 
 int main(void) {
-    char chaine1[] = "Bonjour ESGI cours de C";
+    char chaine1[] = "Bonjour ESGI cours de langage C";
     char chaine2[] = " Vendredi apres midi ";
     char copie[TAILLE_CHAINE];
     char concat[TAILLE_CONCAT];
