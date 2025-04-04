@@ -1,11 +1,11 @@
 #include <stdio.h>
 
-#define TAILLE_CHAINE 100
-#define TAILLE_CONCAT 200
+#define TAILLE_CHAINE 450
+#define TAILLE_CONCAT 900
 
 int main(void) {
-    char chaine1[] = "Hello";
-    char chaine2[] = " World!";
+    char chaine1[] = "Bonjour ESGI cours de C";
+    char chaine2[] = " Vendredi apres midi ";
     char copie[TAILLE_CHAINE];
     char concat[TAILLE_CONCAT];
 
