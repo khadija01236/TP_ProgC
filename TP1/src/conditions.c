@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int main() {
+int main(void) {
     int somme = 0;
 
     for (int i = 1; i <= 1000; i++) {
@@ -9,15 +9,15 @@ int main() {
         }
 
         if (i % 5 == 0 || i % 7 == 0) {
-            somme += i;
-          printf("Somme actuelle : %d\n", somme);
-        }
+            if (somme + i > 5000) {
+                break;
+            }
 
-        if (somme > 5000) {
-            break;
-          // printf(" Arrêt de la boucle 5000.\n");
+            somme += i;
+            printf("Somme actuelle : %d\n", somme);
         }
     }
+
     printf("La somme finale est : %d\n", somme);
 
     return 0;
