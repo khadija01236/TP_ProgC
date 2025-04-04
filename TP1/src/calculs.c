@@ -3,7 +3,7 @@
 int main() {
     int num1 = 10;
     int num2 = 3;
-    char op = '+';  // Tu peux tester avec '+', '-', '*', '/', '%', '&', '|', '~'
+    char op = '+'; 
 
     int resultat;
 
