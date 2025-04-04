@@ -12,8 +12,7 @@ int main(void) {
   printf("div : %d\n", div);
   int modulo = a%b;
   printf("modulo : %d\n", modulo);
-  // if (a == b) {
-  //   printf("");
-  // }
+  int resultat = (a == b);
+  printf("a est-il égal à b ? %d\n", resultat);
   
 }
