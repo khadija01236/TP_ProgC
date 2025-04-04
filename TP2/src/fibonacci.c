@@ -1,31 +1,15 @@
 #include <stdio.h>
 
-int main() {
-    int n;
-
-    printf("Entrez le nombre de termes à générer : ");
-    scanf("%d", &n);
-
-    int U0 = 0, U1 = 1;
-
-    if (n < 0) {
-        printf("Veuillez entrer un nombre positif.\n");
-        return 1;
-    }
-
-    printf("Suite de Fibonacci jusqu'à U%d :\n", n);
+int main(void) {
+    int n = 7;
+    int a = 0, b = 1, temp;
 
     for (int i = 0; i <= n; i++) {
-        if (i == 0) {
-            printf("%d", U0);
-        } else if (i == 1) {
-            printf(", %d", U1);
-        } else {
-            int Un = U0 + U1;
-            printf(", %d", Un);
-            U0 = U1;
-            U1 = Un;
-        }
+        printf("%d", a);
+        if (i < n) printf(", ");
+        temp = a + b;
+        a = b;
+        b = temp;
     }
 
     printf("\n");
