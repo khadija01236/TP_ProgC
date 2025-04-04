@@ -1,18 +1,13 @@
 #include <stdio.h>
 
 int main(void) {
-    int n = 10; 
-    int u0 = 0, u1 = 1, suivant;
+    int n = 10, a = 0, b = 1, i;
 
-    printf("Suite de Fibonacci jusqu'à U%d :\n", n);
-
-    printf("%d, %d", u0, u1);
-
-  for (int i = 2; i < n; i++) {
-        suivant = u0 + u1;
-        printf(", %d", suivant);
-        u0 = u1;
-        u1 = suivant;
+    for (i = 0; i < n; i++) {
+        printf("%d ", a);
+        int temp = a + b;
+        a = b;
+        b = temp;
     }
 
     printf("\n");
