@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 int main() {
-    int cpt = 8;
+    int cpt = 5;
 
     if (cpt >= 10) {
         printf("La valeur de compteur doit être strictement inférieure à 10.\n");
