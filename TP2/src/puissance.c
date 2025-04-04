@@ -9,7 +9,7 @@ int main(void) {
         resultat *= a; 
     }
 
-    printf("%d élevé à la puissance %d est : %d\n", a, b, resultat);
+    printf("%d à la puissance %d est : %d\n", a, b, resultat);
 
     return 0;
 }
