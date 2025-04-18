@@ -50,14 +50,27 @@ int renvoie_message(int client_socket_fd, char *data)
 int recois_envoie_message(int client_socket_fd, char *data)
 {
   printf("Message reçu: %s\n", data);
-  char code[10];
-  if (sscanf(data, "%9s:", code) == 1) // Assurez-vous que le format est correct
+
+  char reponse[1024];
+  printf("Tapez votre réponse au client : ");
+  fflush(stdout); // S'assurer que le message s'affiche avant l'entrée
+  if (fgets(reponse, sizeof(reponse), stdin) == NULL)
   {
-    if (strcmp(code, "message:") == 0)
-    {
-      return renvoie_message(client_socket_fd, data);
-    }
+    perror("Erreur de saisie");
+    return EXIT_FAILURE;
   }
+
+  // Supprimer le saut de ligne (\n) ajouté par fgets
+  size_t len = strlen(reponse);
+  if (len > 0 && reponse[len - 1] == '\n')
+  {
+    reponse[len - 1] = '\0';
+  }
+
+  // Envoyer la réponse au client
+  return renvoie_message(client_socket_fd, reponse);
+}
+
 
   return (EXIT_SUCCESS);
 }
