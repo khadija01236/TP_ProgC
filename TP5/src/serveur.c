@@ -76,13 +76,25 @@ int recois_envoie_message(int client_socket_fd, char *data)
 {
   printf("Message reçu: %s\n", data);
 
-  // Variables pour extraire l’opération et les opérandes
+  // On cherche le début de l'opération après "message: "
+  const char *prefix = "message: ";
+  char *operation = NULL;
+
+  if (strncmp(data, prefix, strlen(prefix)) == 0) {
+    operation = data + strlen(prefix); // pointe juste après "message: "
+  } else {
+    char reponse[1024];
+    snprintf(reponse, sizeof(reponse), "Erreur : format invalide. Préfixe manquant.");
+    return renvoie_message(client_socket_fd, reponse);
+  }
+
+  // Variables pour stocker l’opérateur et les deux entiers
   char operateur;
   int a, b, resultat;
   char reponse[1024];
 
-  // Exemple attendu : "+ 25 15"
-  if (sscanf(data, "%c %d %d", &operateur, &a, &b) == 3)
+  // Lecture de l'opérateur et des opérandes
+  if (sscanf(operation, "%c %d %d", &operateur, &a, &b) == 3)
   {
     switch (operateur)
     {
@@ -98,8 +110,7 @@ int recois_envoie_message(int client_socket_fd, char *data)
       case '/':
         if (b != 0)
           resultat = a / b;
-        else
-        {
+        else {
           snprintf(reponse, sizeof(reponse), "Erreur : division par zéro.");
           return renvoie_message(client_socket_fd, reponse);
         }
@@ -109,7 +120,6 @@ int recois_envoie_message(int client_socket_fd, char *data)
         return renvoie_message(client_socket_fd, reponse);
     }
 
-    // Envoyer le résultat au client
     snprintf(reponse, sizeof(reponse), "Résultat : %d", resultat);
     return renvoie_message(client_socket_fd, reponse);
   }
