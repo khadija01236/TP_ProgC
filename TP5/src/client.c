@@ -12,6 +12,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <arpa/inet.h> // Nécessaire pour inet_addr
 
 #include "client.h"
 
@@ -25,7 +26,7 @@ int envoie_recois_message(int socketfd)
 {
   char data[1024];
 
-  // Réinitialisation de l'ensemble des données
+  // Réinitialisation des données
   memset(data, 0, sizeof(data));
 
   // Demande à l'utilisateur d'entrer un message
@@ -33,11 +34,17 @@ int envoie_recois_message(int socketfd)
   printf("Votre message (max 1000 caractères): ");
   fgets(message, sizeof(message), stdin);
 
-  // Construit le message avec une étiquette "message: "
+  // Supprimer le \n à la fin
+  size_t len = strlen(message);
+  if (len > 0 && message[len - 1] == '\n') {
+    message[len - 1] = '\0';
+  }
+
+  // Préparer le message à envoyer
   strcpy(data, "message: ");
   strcat(data, message);
 
-  // Envoie le message au client
+  // Envoyer le message
   int write_status = write(socketfd, data, strlen(data));
   if (write_status < 0)
   {
@@ -45,10 +52,8 @@ int envoie_recois_message(int socketfd)
     return -1;
   }
 
-  // Réinitialisation de l'ensemble des données
+  // Lire la réponse du serveur
   memset(data, 0, sizeof(data));
-
-  // Lit les données de la socket
   int read_status = read(socketfd, data, sizeof(data));
   if (read_status < 0)
   {
@@ -56,21 +61,18 @@ int envoie_recois_message(int socketfd)
     return -1;
   }
 
-  // Affiche le message reçu du client
+  // Affichage de la réponse
   printf("Message reçu: %s\n", data);
 
-  return 0; // Succès
+  return 0;
 }
 
 int main()
 {
   int socketfd;
-
   struct sockaddr_in server_addr;
 
-  /*
-   * Creation d'une socket
-   */
+  // Création de la socket
   socketfd = socket(AF_INET, SOCK_STREAM, 0);
   if (socketfd < 0)
   {
@@ -78,15 +80,13 @@ int main()
     exit(EXIT_FAILURE);
   }
 
-  // détails du serveur (adresse et port)
+  // Configuration de l'adresse du serveur
   memset(&server_addr, 0, sizeof(server_addr));
   server_addr.sin_family = AF_INET;
-  server_addr.sin_port = htons(PORT);
-  // server_addr.sin_addr.s_addr = INADDR_ANY;
-  serv_addr.sin_addr.s_addr = inet_addr("10.0.29.4");
+  server_addr.sin_port = htons(PORT); // PORT défini dans client.h
+  server_addr.sin_addr.s_addr = inet_addr("10.0.29.4"); // IP de ton serveur
 
-
-  // demande de connection au serveur
+  // Connexion au serveur
   int connect_status = connect(socketfd, (struct sockaddr *)&server_addr, sizeof(server_addr));
   if (connect_status < 0)
   {
@@ -94,11 +94,12 @@ int main()
     exit(EXIT_FAILURE);
   }
 
+  // Boucle d’envoi/réception
   while (1)
   {
-    // appeler la fonction pour envoyer un message au serveur
     envoie_recois_message(socketfd);
   }
 
   close(socketfd);
+  return 0;
 }
