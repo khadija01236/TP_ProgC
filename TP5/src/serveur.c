@@ -47,30 +47,79 @@ int renvoie_message(int client_socket_fd, char *data)
  * @param data : Le message.
  * @return EXIT_SUCCESS en cas de succès, EXIT_FAILURE en cas d'erreur.
  */
+// int recois_envoie_message(int client_socket_fd, char *data)
+// {
+//   printf("Message reçu: %s\n", data);
+
+//   char reponse[1024];
+//   printf("Tapez votre réponse au client : ");
+//   fflush(stdout); // S'assurer que le message s'affiche avant l'entrée
+
+//   if (fgets(reponse, sizeof(reponse), stdin) == NULL)
+//   {
+//     perror("Erreur de saisie");
+//     return EXIT_FAILURE;
+//   }
+
+//   // Supprimer le saut de ligne (\n) ajouté par fgets
+//   size_t len = strlen(reponse);
+//   if (len > 0 && reponse[len - 1] == '\n')
+//   {
+//     reponse[len - 1] = '\0';
+//   }
+
+//   // Envoyer la réponse au client
+//   return renvoie_message(client_socket_fd, reponse);
+// }
+
 int recois_envoie_message(int client_socket_fd, char *data)
 {
   printf("Message reçu: %s\n", data);
 
+  // Variables pour extraire l’opération et les opérandes
+  char operateur;
+  int a, b, resultat;
   char reponse[1024];
-  printf("Tapez votre réponse au client : ");
-  fflush(stdout); // S'assurer que le message s'affiche avant l'entrée
 
-  if (fgets(reponse, sizeof(reponse), stdin) == NULL)
+  // Exemple attendu : "+ 25 15"
+  if (sscanf(data, "%c %d %d", &operateur, &a, &b) == 3)
   {
-    perror("Erreur de saisie");
-    return EXIT_FAILURE;
-  }
+    switch (operateur)
+    {
+      case '+':
+        resultat = a + b;
+        break;
+      case '-':
+        resultat = a - b;
+        break;
+      case '*':
+        resultat = a * b;
+        break;
+      case '/':
+        if (b != 0)
+          resultat = a / b;
+        else
+        {
+          snprintf(reponse, sizeof(reponse), "Erreur : division par zéro.");
+          return renvoie_message(client_socket_fd, reponse);
+        }
+        break;
+      default:
+        snprintf(reponse, sizeof(reponse), "Erreur : opérateur non reconnu.");
+        return renvoie_message(client_socket_fd, reponse);
+    }
 
-  // Supprimer le saut de ligne (\n) ajouté par fgets
-  size_t len = strlen(reponse);
-  if (len > 0 && reponse[len - 1] == '\n')
+    // Envoyer le résultat au client
+    snprintf(reponse, sizeof(reponse), "Résultat : %d", resultat);
+    return renvoie_message(client_socket_fd, reponse);
+  }
+  else
   {
-    reponse[len - 1] = '\0';
+    snprintf(reponse, sizeof(reponse), "Erreur : format invalide. Exemple attendu : + 25 15");
+    return renvoie_message(client_socket_fd, reponse);
   }
-
-  // Envoyer la réponse au client
-  return renvoie_message(client_socket_fd, reponse);
 }
+
 
 /**
  * Gestionnaire de signal pour Ctrl+C (SIGINT).
