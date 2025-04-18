@@ -42,36 +42,11 @@ int renvoie_message(int client_socket_fd, char *data)
 
 /**
  * Cette fonction lit les données envoyées par le client,
- * et renvoie un message en réponse saisi par l'utilisateur.
+ * et renvoie un message en réponse.
  * @param client_socket_fd : Le descripteur de socket du client.
  * @param data : Le message.
  * @return EXIT_SUCCESS en cas de succès, EXIT_FAILURE en cas d'erreur.
  */
-// int recois_envoie_message(int client_socket_fd, char *data)
-// {
-//   printf("Message reçu: %s\n", data);
-
-//   char reponse[1024];
-//   printf("Tapez votre réponse au client : ");
-//   fflush(stdout); // S'assurer que le message s'affiche avant l'entrée
-
-//   if (fgets(reponse, sizeof(reponse), stdin) == NULL)
-//   {
-//     perror("Erreur de saisie");
-//     return EXIT_FAILURE;
-//   }
-
-//   // Supprimer le saut de ligne (\n) ajouté par fgets
-//   size_t len = strlen(reponse);
-//   if (len > 0 && reponse[len - 1] == '\n')
-//   {
-//     reponse[len - 1] = '\0';
-//   }
-
-//   // Envoyer la réponse au client
-//   return renvoie_message(client_socket_fd, reponse);
-// }
-
 int recois_envoie_message(int client_socket_fd, char *data)
 {
   printf("Message reçu: %s\n", data);
@@ -120,6 +95,10 @@ int recois_envoie_message(int client_socket_fd, char *data)
         return renvoie_message(client_socket_fd, reponse);
     }
 
+    // Affichage dans le terminal serveur
+    printf("Résultat calculé : %d\n", resultat);
+
+    // Envoi du résultat au client
     snprintf(reponse, sizeof(reponse), "Résultat : %d", resultat);
     return renvoie_message(client_socket_fd, reponse);
   }
@@ -130,7 +109,6 @@ int recois_envoie_message(int client_socket_fd, char *data)
   }
 }
 
-
 /**
  * Gestionnaire de signal pour Ctrl+C (SIGINT).
  * @param signal : Le signal capturé (doit être SIGINT pour Ctrl+C).
@@ -139,13 +117,12 @@ void gestionnaire_ctrl_c(int signal)
 {
   printf("\nSignal Ctrl+C capturé. Sortie du programme.\n");
 
-  // Fermer le socket si ouvert
   if (socketfd != -1)
   {
     close(socketfd);
   }
 
-  exit(0); // Quitter proprement le programme.
+  exit(0);
 }
 
 /**
@@ -159,18 +136,14 @@ void gerer_client(int client_socket_fd)
 
   while (1)
   {
-    // Réinitialisation des données
     memset(data, 0, sizeof(data));
 
-    // Lecture des données envoyées par le client
     int data_size = read(client_socket_fd, data, sizeof(data));
 
     if (data_size <= 0)
     {
-      // Erreur de réception ou déconnexion du client
       if (data_size == 0)
       {
-        // Le client a fermé la connexion proprement
         printf("Client déconnecté.\n");
       }
       else
@@ -178,7 +151,6 @@ void gerer_client(int client_socket_fd)
         perror("Erreur de réception");
       }
 
-      // Fermer le socket du client et sortir de la boucle de communication
       close(client_socket_fd);
       break;
     }
@@ -188,7 +160,7 @@ void gerer_client(int client_socket_fd)
 }
 
 /**
- * Point d’entrée du programme serveur.
+ * Fonction principale du serveur
  */
 int main()
 {
